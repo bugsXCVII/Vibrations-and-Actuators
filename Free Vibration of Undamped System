@@ -1,0 +1,200 @@
+clc 
+close all
+
+% Scenario 1
+
+% Given values and Initial conditions
+
+m1 = 1;
+m2 = 1;
+k1 = 5;
+k2 = 5;
+k3 = 5;
+x1_0 = 0.1;
+x2_0 = -0.1;
+v1_0 = 0;
+v2_0 = 0;
+
+% Mass and stiffness matrices
+
+m = [m1 0; 0 m2];
+k = [(k1+k2) (-k2); (-k2) (k2+k3)];
+
+% Finding natural frequencies
+
+a = inv(m)*k;
+b = eig(a);
+
+w1 = sqrt(b(1));
+w2 = sqrt(b(2));
+
+fprintf('The natural frequencies for the first scenario are %i rad/s and %i rad/s\n',w1,w2);
+
+% Finding Modes
+
+r1 = ((-m1*(w1^2))+k1+k2)/k2;
+r2 = ((-m1*w2^2)+k1+k2)/k2;
+
+X1 = (1/(r2-r1))*(((((r2*x1_0)-x2_0)^2)+((((-r2*v1_0)+v2_0)^2)/(w1^2)))^0.5);
+X2 = (1/(r2-r1))*(((((-r1*x1_0)+x2_0)^2)+((((r1*v1_0)-v2_0)^2)/(w2^2)))^0.5);
+
+
+fi_1 = atan(((-r2*v1_0)+v2_0)/(w1*((r2*x1_0)-x2_0)));
+fi_2 = atan(((r1*v1_0)-v2_0)/(w2*((-r1*x1_0)+x2_0)));
+
+% Plotting the response
+
+x1 = [];
+
+for i = 0:0.01:30
+    x1 = [x1,(X1*cos((w1*i)+fi_1))+(X2*cos((w2*i)+fi_2))];
+end
+
+x2 = [];
+
+for i = 0:0.01:30
+    x2 = [x2,(r1*X1*cos((w1*i)+fi_1))+(r2*X2*cos((w2*i)+fi_2))];
+end
+
+t = 0:0.01:30;
+
+figure(1)
+hold off
+plot(t,x1)
+hold on
+plot(t,x2)
+xlabel('time (s)'),ylabel('response (m)')
+title('Scenario 1 - Response of Undamped 2 DOF System')
+legend('x1(t)','x2(t)')
+
+%x1(t) = (r1*X1*cos((w1*t)+fi_1))+(r2*X2*cos((w2*t)+fi_2));
+
+% 5.11, then 5.18, for second mode, r1*x1=x12, plot 5.15
+
+% Scenario 2
+
+% Given values and Initial conditions
+
+m1_s2 = 2;
+m2_s2 = 1;
+k1_s2 = 10;
+k2_s2 = 10;
+k3_s2 = 0;
+x1_0_s2 = 0.3;
+x2_0_s2 = 0;
+v1_0_s2 = 0;
+v2_0_s2 = -4;
+
+% Mass and stiffness matrices
+
+m_s2 = [m1_s2 0; 0 m2_s2];
+k_s2 = [(k1_s2+k2_s2) (-k2_s2); (-k2_s2) (k2_s2+k3_s2)];
+
+% Finding natural frequencies
+
+a_s2 = inv(m_s2)*k_s2;
+b_s2 = eig(a_s2);
+
+w1_s2 = sqrt(b_s2(1));
+w2_s2 = sqrt(b_s2(2));
+
+fprintf('The natural frequencies for the second scenario are %i rad/s and %i rad/s\n',w1_s2,w2_s2);
+
+% Finding Modes
+
+r1_s2 = ((-m1_s2*(w1_s2^2))+k1_s2+k2_s2)/k2_s2;
+r2_s2 = ((-m1_s2*w2_s2^2)+k1_s2+k2_s2)/k2_s2;
+
+X1_s2 = (1/(r2_s2-r1_s2))*(((((r2_s2*x1_0_s2)-x2_0_s2)^2)+((((-r2_s2*v1_0_s2)+v2_0_s2)^2)/(w1_s2^2)))^0.5);
+X2_s2 = (1/(r2_s2-r1_s2))*(((((-r1_s2*x1_0_s2)+x2_0_s2)^2)+((((r1_s2*v1_0_s2)-v2_0_s2)^2)/(w2_s2^2)))^0.5);
+
+
+fi_1_s2 = atan(((-r2_s2*v1_0_s2)+v2_0_s2)/(w1_s2*((r2_s2*x1_0_s2)-x2_0_s2)));
+fi_2_s2 = atan(((r1_s2*v1_0_s2)-v2_0_s2)/(w2_s2*((-r1_s2*x1_0_s2)+x2_0_s2)));
+
+% Plotting the response
+
+x1_s2 = [];
+
+for i = 0:0.01:30
+    x1_s2 = [x1_s2,(X1_s2*cos((w1_s2*i)+fi_1_s2))+(X2_s2*cos((w2_s2*i)+fi_2_s2))];
+end
+
+x2_s2 = [];
+
+for i = 0:0.01:30
+    x2_s2 = [x2_s2,(r1_s2*X1_s2*cos((w1_s2*i)+fi_1_s2))+(r2_s2*X2_s2*cos((w2_s2*i)+fi_2_s2))];
+end
+
+figure(2)
+hold off
+plot(t,x1_s2)
+hold on
+plot(t,x2_s2)
+xlabel('time (s)'),ylabel('response (m)')
+title('Scenario 2 - Response of Undamped 2 DOF System')
+legend('x1(t)','x2(t)')
+
+% Scenario 3
+
+% Given values and Initial conditions
+
+m1_s3 = 3;
+m2_s3 = 2;
+k1_s3 = 2;
+k2_s3 = 2;
+k3_s3 = 3;
+x1_0_s3 = 7;
+x2_0_s3 = 5;
+v1_0_s3 = 1;
+v2_0_s3 = 4;
+
+% Mass and stiffness matrices
+
+m_s3 = [m1_s3 0; 0 m2_s3];
+k_s3 = [(k1_s3+k2_s3) (-k2_s3); (-k2_s3) (k2_s3+k3_s3)];
+
+% Finding natural frequencies
+
+a_s3 = inv(m_s3)*k_s3;
+b_s3 = eig(a_s3);
+
+w1_s3 = sqrt(b_s3(1));
+w2_s3 = sqrt(b_s3(2));
+
+fprintf('The natural frequencies for the second scenario are %i rad/s and %i rad/s\n',w1_s3,w2_s3);
+
+% Finding Modes
+
+r1_s3 = ((-m1_s3*(w1_s3^2))+k1_s3+k2_s3)/k2_s3;
+r2_s3 = ((-m1_s3*w2_s3^2)+k1_s3+k2_s3)/k2_s3;
+
+X1_s3 = (1/(r2_s3-r1_s3))*(((((r2_s3*x1_0_s3)-x2_0_s3)^2)+((((-r2_s3*v1_0_s3)+v2_0_s3)^2)/(w1_s3^2)))^0.5);
+X2_s3 = (1/(r2_s3-r1_s3))*(((((-r1_s3*x1_0_s3)+x2_0_s3)^2)+((((r1_s3*v1_0_s3)-v2_0_s3)^2)/(w2_s3^2)))^0.5);
+
+fi_1_s3 = atan(((-r2_s3*v1_0_s3)+v2_0_s3)/(w1_s3*((r2_s3*x1_0_s3)-x2_0_s3)));
+fi_2_s3 = atan(((r1_s3*v1_0_s3)-v2_0_s3)/(w2_s3*((-r1_s3*x1_0_s3)+x2_0_s3)));
+
+% Plotting the response
+
+x1_s3 = [];
+
+for i = 0:0.01:30
+    x1_s3 = [x1_s3,(X1_s3*cos((w1_s3*i)+fi_1_s3))+(X2_s3*cos((w2_s3*i)+fi_2_s3))];
+end
+
+x2_s3 = [];
+
+for i = 0:0.01:30
+    x2_s3 = [x2_s3,(r1_s3*X1_s3*cos((w1_s3*i)+fi_1_s3))+(r2_s3*X2_s3*cos((w2_s3*i)+fi_2_s3))];
+end
+
+figure(3)
+hold off
+plot(t,x1_s3)
+hold on
+plot(t,x2_s3)
+xlabel('time (s)'),ylabel('response (m)')
+title('Scenario 3 - Response of Undamped 2 DOF System')
+legend('x1(t)','x2(t)')
+
